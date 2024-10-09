@@ -67,6 +67,7 @@ printOut( amountNOK + " kroner is " + amountUSD + " dollars ");
 
 printOut(newLine);
 
+
 printOut("--- Part 6 ----------------------------------------------------------------------------------------------");
 /* Put your code below here!*/
 printOut("There is much between heaven and earth that we do not understand.");
@@ -223,3 +224,4 @@ let days = totalDays % 7
 printOut(`${totalDays} days is equal to ${weeks} weeks and ${days} days.`);
 
 printOut(newLine);
+
