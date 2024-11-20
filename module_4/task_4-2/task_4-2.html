@@ -10,8 +10,29 @@
       <span id="txtOut" style="white-space: nowrap"></span>
     </div>
     <ol>
-      <li>[Write the question here, and copy this for more questions]</li>
-      <p>[Write your answer here, and copy this for more answers]</p>
+      <li>What is an array? A short and concise answer is expected here?</li>
+      <p>Det er en struktur som lagrer flere verdier i en variabel, og hver verdi kan nås via en ideks som starter på 0.</p>
+      <li>What does it mean to "hardcode" when we talk about programming? In English, it's called "hardcoding", "hard-coding", or "hardcoding"</li>
+      <p>Det betyr at verdiene legges dirkete inn i koden, og ikke blir generert dynamiks eller hentes fra andre kidler.</p>
+      <li>Explain in plain text what happens in task 3, and how we can traverse (iterate) the array when we (humans) don't "know" how long the array is.</li>
+      <p>Teksten blir gjort om til ett array ved hjelp av split funskjonen. Det brukes foreach og for løkker fordi vi ikke vet lengden på arrayet, og det vil behandle alle elementene.</p>
+      <li>Why is it beneficial to store instances of a class in arrays, as in task 4?</li>
+      <p>Det er på grunn av vi kan håndtere dem samlet. Dermed kan man sortere, filtrere og søke blant dem. Det er gjør det enda mer effektivt.</p>
+      <li>Try your best to explain the EWeekDays object from task 7. How do we use the "value" attribute, for
+        example? In what way do "WeekDay", "Workdays", and "Weekends" differ from each other? If we
+        wanted to create a new element "WorkoutDays", which would contain "Monday", "Wednesday", and
+        "Thursday", how would it ideally look? (I will choose the best answer to this task and reward it with
+        pizza in the cafeteria right after New Year. Remember to mark in your submission if you want to
+        participate in the competition!)</li>
+      <p>Value brukes for å vise verdier som kan kombineres med binære behandlinger. Arbeidsdagene og helgene kan kombineres basert på verdiene. Weekday1 til Weekday2 viser dager med egne navn og verdier. Workdays kombinerer alle verdiene i ukedagene, mens weekends verdeine for helga. WorkoutDays" er en ny nøkkel i objektet og ville inneholde følgende verdier: "value": 13 (summen av 0x01, 0x04 og 0x08) og "name": "Treningsdager". Dette viser hvilke dager som regnes som treningsdager.</p>
+      <li>In task 8, we will use a "callback" routine when sorting. Explain how such a "callback" routine works.</li>
+      <p>Funskjonen brukes for å sammenlige to elemnter og bestemme rekkefølgen. Det vil returnere et negativt verdi dersom det første elementet kommer før det andre. Det viser også 0 hvsi de er like og en positiv verdi hvis det første skal komme etter det andre.</p>
+      <li>What happens in the sorting routines you have created? Try to explain how the array can figure out
+        if an element should come before or after another. The best way to answer this is to actually print
+        both parameters each time the sorting routine runs.</li>
+      <p>Når vi sorterer sammenligner funskjonen to elementer og justerer rekkefølgen basert på returverdien. Når sorteringsfunskjonen sammenligner to tall, skriver vii ut begge verdiene (a og b). Hvis vi sorterer i stigende rekkefølge, sjekkes om a er mindre enn b. Da ser vi hvordan rekkefølgen sorteres basert på sammenligningen.</p>
+      <li>In task 10, we will create an array with rows and columns. Explain what the first element of the array contains.</li>
+      <p>I en array med rader og kolloner, er det første elementet en rad som selv er en array som inneholder kolonne verdiene. For eks. hvis vi har en array som viser en tabell, vil det første elementet vise verdiene i første rad.</p>
     </ol>
     <script type="module" src="./task_4-2.mjs" defer></script>
   </body>
