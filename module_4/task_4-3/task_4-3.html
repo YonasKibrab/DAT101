@@ -97,8 +97,17 @@
   </div>
 </fieldset>
 <ol>
-  <li>[Write the question here, and copy this for more questions]</li>
-  <p>[Write your answer here, and copy this for more answers]</p>
+  <li>In this assignment, we use the DOM. Explain how this library can help us develop interactive web pages.</li>
+  <p>DOM (Document Object Model) gjør det mulig for utviklere å interagere med og manipulere HTML-elementer dynamisk ved hjelp av JavaScript. Det tillater oppdatering av innhold, styling og struktur på en nettside som svar på brukerens handlinger. Dette gjør opplevelsen mer interaktiv.</p>
+  <li>What is an event? Simply explain what happens when we add an event listener to an object.</li>
+  <p>En hendelse er en handling som tastetrykk, museklikk eller sideinnlastning. Dette er ting som nettleseren kan oppdage. Når vi legger "event listener" til ett objekt kan javascript finne spesifikke hendelser og kjøre en definert funkjson når hendelsen skjer. </p>
+  <li>Sometimes we need to use an event object to get data from the event. Explain how this event
+    object is structured, don't explain all functions or attributes. Try to explain, for example, how to
+    retrieve data from a keyboard or mouse.</li>
+  <p>Event-objektet gir informajson om en hendelse når den oppstår. For eksempel, i en tastaturhendelse brukes det 
+  "event.key" for å finne hvilken tast som ble trykket, og i en musehendelse kan vi bruke blant annet "event.clientX" for å få musens posisjon på skjermen. Dette er effektivt for å lage responsive brukerinteraskjoner. </p>
+  <li>Explain the main difference between DOM id and DOM name. Can we have identical IDs?</li>
+  <p>DOM id brukes til å identfisere ett element unikt i DOM-en og skal være unikt på en side. På den andre siden kan name attributet deles mellom flere elementer og den brukes ofte i grupper. Å bruke dupliserte ID-er kan føre til uforutsigbar oppførsel. Det kan også gjøre det vanskelig å få tilgang til elementer på en troverdig måte.</p>
 </ol>
 <script type="module" src="./task_4-3.mjs" defer></script>
 </body>
