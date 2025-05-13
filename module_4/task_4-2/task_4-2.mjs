@@ -135,3 +135,5 @@ array2D.forEach(function(row) {
     });
 });
 printOut(newLine);
+ 
+
