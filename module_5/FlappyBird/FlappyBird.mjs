@@ -37,13 +37,16 @@ export const GameProps = {
   soundMuted: false,
   dayTime: true,
   speed: 1,
-  status: EGameStatus.idle, //For testing, normalt EGameStatus.idle
+  status: EGameStatus.idle, //For testing, normally EGameStatus.idle
   background: null,
   ground: null,
   hero: null,
   obstacles: [],
   baits: [],
   menu: null,
+  score: 0,
+  bestScore: 0,
+  sounds: {countDown: null, food: null, gameOver: null, dead: null, running: null},
 };
 
 //--------------- Functions ----------------------------------------------//
@@ -69,13 +72,13 @@ function loadGame() {
   pos.y = 100;
   GameProps.hero = new THero(spcvs, SpriteInfoList.hero1, pos);
 
-  spawnObstacle();
-  spawnBait();
+  GameProps.menu = new TMenu(spcvs);
+
+  //Load sounds
+  GameProps.sounds.running = new libSound.TSoundFile("./Media/running.mp3");
 
   requestAnimationFrame(drawGame);
   setInterval(animateGame, 10);
-
-  GameProps.menu = new TMenu(spcvs);
 }// end of loadGame
 
 function drawGame() {
@@ -117,9 +120,16 @@ function animateGame() {
       }
       GameProps.hero.update();
       let delObstacleIndex = -1;
+      
       for (let i = 0; i < GameProps.obstacles.length; i++) {
         const obstacle = GameProps.obstacles[i];
         obstacle.update();
+        if(obstacle.right < GameProps.hero.left && !obstacle.hasPassed) {
+          //Congratulations, you have passed the obstacle
+          GameProps.menu.incScore(20);
+          console.log("Score: " + GameProps.score);
+          obstacle.hasPassed = true;
+        }
         if (obstacle.posX < -100) {
           delObstacleIndex = i;
         }
@@ -141,6 +151,7 @@ function animateGame() {
       }
       if (delBaitIndex >= 0) {
         GameProps.baits.splice(delBaitIndex, 1);
+        GameProps.menu.incScore(10);
       }
       break;
       case EGameStatus.idle:
@@ -163,11 +174,25 @@ function spawnBait() {
   const pos = new lib2d.TPosition(SpriteInfoList.background.width, 100);
   const bait = new TBait(spcvs, SpriteInfoList.food, pos);
   GameProps.baits.push(bait);
-  //Generer nye baits hvert 0.5 til 1 sekund med step på 0.1
+  //Generate a new bait in 0.5-1.5 seconds
   if (GameProps.status === EGameStatus.playing) {
     const sec = Math.ceil(Math.random() * 5) / 10 + 0.5;
     setTimeout(spawnBait, sec * 1000);
   }
+}
+
+export function startGame() {
+  GameProps.status = EGameStatus.playing;
+  //The hero is dead, so we must create a new hero
+  GameProps.hero = new THero(spcvs, SpriteInfoList.hero1, new lib2d.TPosition(100, 100));
+  //We must reset the obstacles and baits
+  GameProps.obstacles = [];
+  GameProps.baits = [];
+  GameProps.menu.reset();
+  spawnObstacle();
+  spawnBait();
+  //Play the running sound
+  GameProps.sounds.running.play();
 }
 
 //--------------- Event Handlers -----------------------------------------//
