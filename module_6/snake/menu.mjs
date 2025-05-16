@@ -28,7 +28,7 @@ export class TMenu {
      this.#bgGameOver = new libSprite.TSprite(
       spcvs,
       SheetData.GameOver,
-      new lib2D.TPosition(5, 12)
+      new lib2D.TPosition(25, 40)
     );
     // Home
      this.#btnHome = new libSprite.TSpriteButton(
@@ -36,14 +36,21 @@ export class TMenu {
       SheetData.Home,
       new lib2D.TPoint(75, 350)
     );
-    this.#btnHome.onClick = () => {console.log("Button 1 clicked");};
+    this.#btnHome.onClick = () => {
+  // Gå tilbake til Idle‐state (vis Play-knapp igjen)
+  GameProps.gameStatus      = EGameStatus.Idle;
+  // Skjul score‐visningen
+  this.#scoreSprite.visible = false;
+  // Nullstill brettet
+  GameProps.gameBoard.reset();
+};
     // lagt til: opprett Pause/Resume-knapp
     this.#btnPause = new libSprite.TSpriteButton(
       spcvs,
       SheetData.Resume,
-      new lib2D.TPoint(10 + SheetData.Play.width + 10, 10)
+      new lib2D.TPoint(340, 250)
     );
-    this.#btnPause.animateSpeed=10
+    this.#btnPause.animateSpeed = 10;
     // lagt til: opprett Retry-knapp
     this.#btnRetry = new libSprite.TSpriteButton(
       spcvs,
@@ -59,7 +66,7 @@ export class TMenu {
     );
     this.#scoreSprite.scale   = 0.5;
     this.#scoreSprite.alpha   = 0.8;
-    this.#scoreSprite.visible = true;
+    this.#scoreSprite.visible = false;
     this.#scoreSprite.value   = 0;
   }
 
@@ -104,12 +111,10 @@ export class TMenu {
       this.#btnPlay.draw();
     }
     // tegn Pause/Resume når spill i gang eller pause
-    if (
-      GameProps.gameStatus === EGameStatus.Playing ||
-      GameProps.gameStatus === EGameStatus.Pause
-    ) {
-      this.#btnPause.draw();
-    }
+    // tegn Resume-knapp kun når spillet er paused
+if (GameProps.gameStatus === EGameStatus.Pause) {
+  this.#btnPause.draw();
+}
     // tegn Retry når GameOver
     if (GameProps.gameStatus === EGameStatus.GameOver) {
       this.#btnRetry.draw();

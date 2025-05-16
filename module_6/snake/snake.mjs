@@ -5,7 +5,7 @@ import lib2D      from "../../common/libs/lib2d_v2.mjs";
 import { GameProps, SheetData, bateIsEaten } from "./game.mjs";
 import { TBoardCell, EBoardCellInfoType }   from "./gameBoard.mjs";
 
-const ESpriteIndex = { UR:0, RU:1, DL:2, DR:3, RL:4, UD:5 };
+const ESpriteIndex = {UR: 0, LD: 0, RU: 1, DR: 1, DL: 2, LU: 2, RD: 3, UL: 3, RL: 4, UD: 5};
 export const EDirection = { Up:0, Right:1, Left:2, Down:3 };
 
 // Base‐klasse for et slange‐segment
