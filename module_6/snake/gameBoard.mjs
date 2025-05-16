@@ -1,9 +1,10 @@
 "use strict";
 
 import { EDirection } from "./snake.mjs";
-import { SheetData } from "./game.mjs";                     // lagt til: import av SheetData for sprite‐størrelse
+import { SheetData } from "./game.mjs";               
 
 export const GameBoardSize = { Cols: 24, Rows: 18 };
+
 export const EBoardCellInfoType = { Empty: 0, Snake: 1, Bait: 2 };
 
 export class TBoardCell {
@@ -11,45 +12,48 @@ export class TBoardCell {
     this.col = aCol;
     this.row = aRow;
   }
-}
+}// End off class TBoardCell
+//------------------------------------------------------------------------------------------
 
 export class TBoardCellInfo {
   constructor() {
     this.direction = EDirection.Right;
     this.infoType  = EBoardCellInfoType.Empty;
   }
-}
+}// End off class TBoardCellInfo
+//------------------------------------------------------------------------------------------
 
 export class TGameBoard {
   #spcvs;
   #ctx;
   constructor(aSpriteCanvas) {
-    this.#spcvs = aSpriteCanvas;
+    this.#spcvs = aSpriteCanvas; 
     this.#ctx = this.#spcvs.context;
+    
     this.cols      = GameBoardSize.Cols;
     this.rows      = GameBoardSize.Rows;
     this.gameBoard = [];
 
-    this.cellWidth  = SheetData.Head.width;                // lagt til: celle‐bredde basert på head‐sprite
-    this.cellHeight = SheetData.Head.height;               // lagt til: celle‐høyde basert på head‐sprite
+    this.cellWidth  = SheetData.Head.width;                // Setter hvor bred hver rute skal være basert på Sheetdata
+    this.cellHeight = SheetData.Head.height;               // Det samme som ovenfor, men høyden
 
-    for (let r = 0; r < this.rows; r++) {
+    for (let i = 0; i < this.rows; i++) {
       const row = [];
-      for (let c = 0; c < this.cols; c++) {
+      for (let j = 0; j < this.cols; j++) {
         row.push(new TBoardCellInfo());
       }
       this.gameBoard.push(row);
     }
-  }
+  } // End of constructor
 
   getCell(aRow, aCol) {
     if (aRow < 0 || aRow >= this.rows || aCol < 0 || aCol >= this.cols) {
       return null;
     }
     return this.gameBoard[aRow][aCol];
-  }
+  } // End of getCell
 
-  draw() {                                            // lagt til: metode for å tegne brettet
+  draw() {                                            
     const ctx = this.#ctx;
     // Bakgrunn
     ctx.fillStyle = "#fabd04";
@@ -77,7 +81,7 @@ export class TGameBoard {
     }
   }
 
-  reset() {                                              // lagt til: reset av alle celler for nytt spill
+  reset() {                                              
     for (let r = 0; r < this.rows; r++) {
       for (let c = 0; c < this.cols; c++) {
         const ci = this.gameBoard[r][c];
@@ -86,4 +90,5 @@ export class TGameBoard {
       }
     }
   }
-}
+}// End of class TGameBoard
+//------------------------------------------------------------------------------------------

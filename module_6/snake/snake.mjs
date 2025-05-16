@@ -1,14 +1,26 @@
 "use strict";
 
+//------------------------------------------------------------------------------------------
+//----------- Import modules, mjs files  ---------------------------------------------------
+//------------------------------------------------------------------------------------------
+
 import libSprite from "../../common/libs/libSprite_v2.mjs";
 import lib2D      from "../../common/libs/lib2d_v2.mjs";
 import { GameProps, SheetData, bateIsEaten } from "./game.mjs";
 import { TBoardCell, EBoardCellInfoType }   from "./gameBoard.mjs";
 
+//------------------------------------------------------------------------------------------
+//----------- variables and object ---------------------------------------------------------
+//------------------------------------------------------------------------------------------
+
 const ESpriteIndex = {UR: 0, LD: 0, RU: 1, DR: 1, DL: 2, LU: 2, RD: 3, UL: 3, RL: 4, UD: 5};
 export const EDirection = { Up:0, Right:1, Left:2, Down:3 };
 
-// Base‐klasse for et slange‐segment
+
+//-----------------------------------------------------------------------------------------
+//----------- Classes ---------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
+
 class TSnakePart extends libSprite.TSprite {
   constructor(aSpriteCanvas, aSpriteInfo, aBoardCell) {
     const pos = new lib2D.TPoint(
@@ -27,57 +39,58 @@ class TSnakePart extends libSprite.TSprite {
     this.x = this.boardCell.col * this.spi.width;
     this.y = this.boardCell.row * this.spi.height;
   }
-}
+} // class TSnakePart
 
-// Hoved‐klasse for slangens hode
+
 class TSnakeHead extends TSnakePart {
   constructor(aSpriteCanvas, aBoardCell) {
     super(aSpriteCanvas, SheetData.Head, aBoardCell);
     this.newDirection = this.direction;
-    this.onEat = null;                               // lagt til: callback når bait spises
+    this.onEat = null;                               // Lager en funskjon som kan kjøres når sslangehodet spiser eplet
   }
 
   setDirection(aDirection) {
-    const horiz   = (this.direction === EDirection.Left || this.direction === EDirection.Right);
-    const vert    = (this.direction === EDirection.Up   || this.direction === EDirection.Down);
-    const newHoriz= (aDirection === EDirection.Left   || aDirection === EDirection.Right);
-    const newVert = (aDirection === EDirection.Up     || aDirection === EDirection.Down);
-    if ((horiz && newVert) || (vert && newHoriz)) {
+    if ((this.direction === EDirection.Right || this.direction === EDirection.Left) && (aDirection === EDirection.Up || aDirection === EDirection.Down)) {
+      this.newDirection = aDirection;
+    } else if ((this.direction === EDirection.Up || this.direction === EDirection.Down) && (aDirection === EDirection.Right || aDirection === EDirection.Left)) {
       this.newDirection = aDirection;
     }
   }
 
   update() {
-    // lagre retning i cellen
     GameProps.gameBoard.getCell(this.boardCell.row, this.boardCell.col).direction = this.newDirection;
-
-    // flytt hodet
     switch (this.newDirection) {
-      case EDirection.Up:    this.boardCell.row--; break;
-      case EDirection.Right: this.boardCell.col++; break;
-      case EDirection.Left:  this.boardCell.col--; break;
-      case EDirection.Down:  this.boardCell.row++; break;
+      case EDirection.Up:
+        this.boardCell.row--;
+        break;
+      case EDirection.Right:
+        this.boardCell.col++;
+        break;
+      case EDirection.Left:
+        this.boardCell.col--;
+        break;
+      case EDirection.Down:
+        this.boardCell.row++;
+        break;
     }
     this.direction = this.newDirection;
     this.index = this.direction;
 
     const ci = GameProps.gameBoard.getCell(this.boardCell.row, this.boardCell.col);
-    // kollisjon med vegg eller egen kropp
     if (!ci || ci.infoType === EBoardCellInfoType.Snake) {
-      return false;
+      return false; // Collision detected, do not continue
     }
     // spiste bait
     if (ci.infoType === EBoardCellInfoType.Bait) {
       bateIsEaten();
-      if (this.onEat) this.onEat();                  // lagt til: sett flagg via callback
+      if (this.onEat) this.onEat();                  // Når slangehodet spiser bait, får restten av slangen beskjed
     }
-    ci.infoType = EBoardCellInfoType.Snake;
+    ci.infoType = EBoardCellInfoType.Snake; // Set the cell to Snake
     super.update();
-    return true;
+    return true;  // No collision, continue
   }
 }
 
-// Slangens kropp, håndterer hjørner
 class TSnakeBody extends TSnakePart {
   constructor(aSpriteCanvas, aBoardCell) {
     super(aSpriteCanvas, SheetData.Body, aBoardCell);
@@ -123,7 +136,6 @@ class TSnakeBody extends TSnakePart {
   }
 
   clone() {
-    // Returnerer et nytt kroppssegment på samme posisjon
     const seg = new TSnakeBody(
       this.spcvs,
       new TBoardCell(this.boardCell.col, this.boardCell.row)
@@ -132,9 +144,10 @@ class TSnakeBody extends TSnakePart {
     seg.index     = this.index;
     return seg;
   }
-}
 
-// Slangens hale
+}// class TSnakeBody
+
+
 class TSnakeTail extends TSnakePart {
   constructor(aSpriteCanvas, aBoardCell) {
     super(aSpriteCanvas, SheetData.Tail, aBoardCell);
@@ -143,14 +156,21 @@ class TSnakeTail extends TSnakePart {
   update() {
     // tøm gammel hale‐celle
     let ci = GameProps.gameBoard.getCell(this.boardCell.row, this.boardCell.col);
-    ci.infoType = EBoardCellInfoType.Empty;
+    ci.infoType = EBoardCellInfoType.Empty; // Clear the cell, before moving the tail
 
-    // flytt halen
     switch (this.direction) {
-      case EDirection.Up:    this.boardCell.row--; break;
-      case EDirection.Right: this.boardCell.col++; break;
-      case EDirection.Left:  this.boardCell.col--; break;
-      case EDirection.Down:  this.boardCell.row++; break;
+      case EDirection.Up:
+        this.boardCell.row--;
+        break;
+      case EDirection.Right:
+        this.boardCell.col++;
+        break;
+      case EDirection.Left:
+        this.boardCell.col--;
+        break;
+      case EDirection.Down:
+        this.boardCell.row++;
+        break;
     }
 
     ci = GameProps.gameBoard.getCell(this.boardCell.row, this.boardCell.col);
@@ -160,7 +180,6 @@ class TSnakeTail extends TSnakePart {
   }
 
   clone() {
-    // lagt til: gir clone-metode for halen
     const seg = new TSnakeBody(
       this.spcvs,
       new TBoardCell(this.boardCell.col, this.boardCell.row)
@@ -169,34 +188,36 @@ class TSnakeTail extends TSnakePart {
     seg.index     = this.index;
     return seg;
   }
-}
+}// class TSnakeTail
 
-// Hoved‐klasse for Snake
+
 export class TSnake {
   #isDead    = false;
-  #baitEaten = false;                                 // lagt til: flagg for vekst
+  #baitEaten = false;                                 // Brukes for å vite om slangehalen skal vokse
   #head;
   #body;
   #tail;
-
   constructor(aSpriteCanvas, aBoardCell) {
     this.#head = new TSnakeHead(aSpriteCanvas, aBoardCell);
-    this.#head.onEat = () => { this.#baitEaten = true; };  // lagt til: bind callback
-
     let col = aBoardCell.col - 1;
+    this.#head.onEat = () => { this.#baitEaten = true; };  //Når slangehodet  spiser bait settes Baiteaten til true
+
     this.#body = [
       new TSnakeBody(aSpriteCanvas, new TBoardCell(col, aBoardCell.row))
     ];
     col--;
     this.#tail = new TSnakeTail(aSpriteCanvas, new TBoardCell(col, aBoardCell.row));
-  }
+  } // constructor
 
   draw() {
     this.#head.draw();
-    this.#body.forEach(part => part.draw());
+    for (let i = 0; i < this.#body.length; i++) {
+      this.#body[i].draw();
+    }
     this.#tail.draw();
-  }
-
+  } // draw
+  
+  //Returns true if the snake is alive
   update() {
     if (this.#isDead) return false;
 
@@ -212,7 +233,7 @@ export class TSnake {
 
     // flytt hale kun hvis ikke nettopp spist
     if (this.#baitEaten) {
-      this.#baitEaten = false;                        // lagt til: nullstill flagg
+      this.#baitEaten = false;    // Spises en bait står halen i ro i en runde og vokser, etterpå setttes baiteaten til false slik at det ikke skjer flere ganger på rad
     } else {
       this.#tail.update();
     }
@@ -222,10 +243,10 @@ export class TSnake {
 
   setDirection(aDirection) {
     this.#head.setDirection(aDirection);
-  }
+  } 
 
   grow() {
-    // lagt til: bruk tail.clone() for vekst
+    //Bruker tail.clone() for vekst
     const seg = this.#tail.clone();
     this.#body.unshift(seg);
   }

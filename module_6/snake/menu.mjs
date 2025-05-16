@@ -1,6 +1,6 @@
-// menu.mjs
-
 "use strict";
+
+/* Use this file to create the menu for the snake game. */
 
 import libSprite from "../../common/libs/libSprite_v2.mjs";
 import lib2D     from "../../common/libs/lib2d_v2.mjs";
@@ -18,7 +18,7 @@ export class TMenu {
 
   constructor(spcvs) {
     this.#spcvs = spcvs;
-    // lagt til: opprett Play-knapp
+    //Lager Play knappen som gjør at spilleren kan starte
     this.#btnPlay = new libSprite.TSpriteButton(
       spcvs,
       SheetData.Play,
@@ -37,28 +37,28 @@ export class TMenu {
       new lib2D.TPoint(75, 350)
     );
     this.#btnHome.onClick = () => {
-  // Gå tilbake til Idle‐state (vis Play-knapp igjen)
+  // Går tilbake til Idle‐state 
   GameProps.gameStatus      = EGameStatus.Idle;
-  // Skjul score‐visningen
+  // Skjuler score‐visningen
   this.#scoreSprite.visible = false;
-  // Nullstill brettet
+  // Nullstiller brettet
   GameProps.gameBoard.reset();
 };
-    // lagt til: opprett Pause/Resume-knapp
+    // oppretter Pause/Resume-knapp
     this.#btnPause = new libSprite.TSpriteButton(
       spcvs,
       SheetData.Resume,
       new lib2D.TPoint(340, 250)
     );
     this.#btnPause.animateSpeed = 10;
-    // lagt til: opprett Retry-knapp
+    
     this.#btnRetry = new libSprite.TSpriteButton(
       spcvs,
       SheetData.Retry,
       new lib2D.TPosition(630, 350)
     );
     this.#btnRetry.onClick = () => {console.log("Button 1 clicked");};
-    // lagt til: opprett score-visning
+    
     this.#scoreSprite = new libSprite.TSpriteNumber(
       spcvs,
       SheetData.Number,
@@ -71,7 +71,7 @@ export class TMenu {
   }
 
   init() {
-    // lagt til: lytter på klikk
+    
     this.#spcvs.canvas.addEventListener("mousedown", (evt) => {
       const x = evt.offsetX, y = evt.offsetY;
 
@@ -80,8 +80,8 @@ export class TMenu {
         GameProps.gameStatus === EGameStatus.Idle &&
         this.#hit(this.#btnPlay, x, y)
       ) {
-        GameProps.gameStatus      = EGameStatus.Playing; // lagt til: start spill
-        this.#scoreSprite.visible = true;                // lagt til: vis score
+        GameProps.gameStatus      = EGameStatus.Playing; // starter spill
+        this.#scoreSprite.visible = true;                // viser score
         newGame()
       }
       // Pause/Resume-knapp
@@ -93,7 +93,7 @@ export class TMenu {
         GameProps.gameStatus =
           GameProps.gameStatus === EGameStatus.Playing
             ? EGameStatus.Pause
-            : EGameStatus.Playing;                      // lagt til: toggle pause
+            : EGameStatus.Playing;                      
       }
       // Retry-knapp når GameOver
       else if (
@@ -106,28 +106,28 @@ export class TMenu {
   }
 
   draw() {
-    // tegn Play når Idle
+    // Tegner Play når Idle
     if (GameProps.gameStatus === EGameStatus.Idle) {
       this.#btnPlay.draw();
     }
-    // tegn Pause/Resume når spill i gang eller pause
-    // tegn Resume-knapp kun når spillet er paused
+    // Tegner Pause/Resume når spill i gang eller pause
+    // Tegner Resume-knapp kun når spillet er paused
 if (GameProps.gameStatus === EGameStatus.Pause) {
   this.#btnPause.draw();
 }
-    // tegn Retry når GameOver
+    // Tegner Retry når GameOver
     if (GameProps.gameStatus === EGameStatus.GameOver) {
       this.#btnRetry.draw();
       this.#bgGameOver.draw();
     }
     // tegn score hvis synlig
     if (this.#scoreSprite.visible) {
-      this.#scoreSprite.value = GameProps.score;     // lagt til: oppdater score-verdi
-      this.#scoreSprite.draw();                      // lagt til: tegn score
+      this.#scoreSprite.value = GameProps.score;     // Oppdaterer score verdi
+      this.#scoreSprite.draw();                      // Tegner scoren
     }
   }
 
-  // lagt til: enkel rektangel-hit-test for sprites
+  // Enkel rektangel hit-test for sprites
   #hit(sprite, x, y) {
     return (
       x >= sprite.x &&
